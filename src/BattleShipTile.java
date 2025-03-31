@@ -11,12 +11,12 @@ import javax.swing.JButton;
  *
  * @author wulft
  */
-public class TicTacToeTile extends JButton
+public class BattleShipTile extends JButton
 {
     private int row;
     private int col;
 
-    public TicTacToeTile(int row, int col) {
+    public BattleShipTile(int row, int col) {
         super();
         this.row = row;
         this.col = col;

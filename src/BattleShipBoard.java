@@ -1,9 +1,9 @@
-public class TTTBoard {
-    private TicTacToeTile[][] board;
+public class BattleShipBoard {
+    private BattleShipTile[][] board;
     private String currentPlayer;
 
-    public TTTBoard() {
-        board = new TicTacToeTile[3][3];
+    public BattleShipBoard() {
+        board = new BattleShipTile[3][3];
         createBoard();
         currentPlayer = "X";
     }
@@ -11,13 +11,13 @@ public class TTTBoard {
     private void createBoard() {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
-                board[row][col] = new TicTacToeTile(row, col);
+                board[row][col] = new BattleShipTile(row, col);
                 board[row][col].setText(" ");
             }
         }
     }
 
-    public TicTacToeTile[][] getBoard() {
+    public BattleShipTile[][] getBoard() {
         return board;
     }
 

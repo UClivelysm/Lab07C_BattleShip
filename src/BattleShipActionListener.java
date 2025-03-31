@@ -2,18 +2,18 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TicTacToeActionListener implements ActionListener {
-    private TicTacToeFrame frame;
-    private TTTBoard gameBoard;
+public class BattleShipActionListener implements ActionListener {
+    private BattleShipFrame frame;
+    private BattleShipBoard gameBoard;
 
-    public TicTacToeActionListener(TicTacToeFrame frame, TTTBoard gameBoard) {
+    public BattleShipActionListener(BattleShipFrame frame, BattleShipBoard gameBoard) {
         this.frame = frame;
         this.gameBoard = gameBoard;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        TicTacToeTile tile = (TicTacToeTile) e.getSource();
+        BattleShipTile tile = (BattleShipTile) e.getSource();
         int row = tile.getRow();
         int col = tile.getCol();
 

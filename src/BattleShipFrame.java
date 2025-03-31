@@ -1,11 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class TicTacToeFrame extends JFrame {
-    private TTTBoard gameBoard;
+public class BattleShipFrame extends JFrame {
+    private BattleShipBoard gameBoard;
 
-    public TicTacToeFrame() {
-        gameBoard = new TTTBoard(); // Creates the Board object
+    public BattleShipFrame() {
+        gameBoard = new BattleShipBoard(); // Creates the Board object
         setLayout(new GridLayout(3, 3));
         createBoard();
 
@@ -16,8 +16,8 @@ public class TicTacToeFrame extends JFrame {
     }
 
     private void createBoard() {
-        TicTacToeTile[][] boardTiles = gameBoard.getBoard();
-        TicTacToeActionListener listener = new TicTacToeActionListener(this, gameBoard);
+        BattleShipTile[][] boardTiles = gameBoard.getBoard();
+        BattleShipActionListener listener = new BattleShipActionListener(this, gameBoard);
 
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
