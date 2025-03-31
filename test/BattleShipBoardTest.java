@@ -1,26 +1,22 @@
-import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class BattleShipBoardTest {
 
     private BattleShipBoard board;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    public void setUp() {
         board = new BattleShipBoard();
     }
 
     @Test
     public void testBoardDimensions() {
         BattleShipTile[][] tiles = board.getBoard();
-        // Ensure board has 10 rows.
-        assertEquals("Board should have 10 rows", 10, tiles.length);
-        // Ensure each row has 10 columns.
+        assertEquals(10, tiles.length, "Board should have 10 rows");
         for (int row = 0; row < 10; row++) {
-            assertEquals("Row " + row + " should have 10 columns", 10, tiles[row].length);
+            assertEquals(10, tiles[row].length, "Row " + row + " should have 10 columns");
         }
     }
 
@@ -35,8 +31,8 @@ public class BattleShipBoardTest {
                 }
             }
         }
-        // Total ship parts should equal 5 + 4 + 3 + 3 + 2 = 17.
-        assertEquals("There should be exactly 17 ship spots on the board", 17, shipSpotCount);
+        // The total ship parts should equal 5 + 4 + 3 + 3 + 2 = 17.
+        assertEquals(17, shipSpotCount, "There should be exactly 17 ship spots on the board");
     }
 
     @Test
@@ -47,12 +43,12 @@ public class BattleShipBoardTest {
             for (int col = 0; col < 10 && !foundShipTile; col++) {
                 if (tiles[row][col].getShipValue() != 0) {
                     BattleShipShip ship = board.getShipAt(row, col);
-                    assertNotNull("getShipAt should return a ship for a tile with a ship value", ship);
+                    assertNotNull(ship, "getShipAt should return a ship for a tile with a ship value");
                     foundShipTile = true;
                 }
             }
         }
-        assertTrue("There should be at least one ship tile on the board", foundShipTile);
+        assertTrue(foundShipTile, "There should be at least one ship tile on the board");
     }
 
     @Test
@@ -62,39 +58,39 @@ public class BattleShipBoardTest {
         for (int row = 0; row < 10 && !foundEmptyTile; row++) {
             for (int col = 0; col < 10 && !foundEmptyTile; col++) {
                 if (tiles[row][col].getShipValue() == 0) {
-                    assertNull("getShipAt should return null for an empty tile", board.getShipAt(row, col));
+                    assertNull(board.getShipAt(row, col), "getShipAt should return null for an empty tile");
                     foundEmptyTile = true;
                 }
             }
         }
-        assertTrue("There should be at least one empty tile on the board", foundEmptyTile);
+        assertTrue(foundEmptyTile, "There should be at least one empty tile on the board");
     }
 
     @Test
     public void testResetBoard() {
-        // Check the ship count before reset.
+        // Count ship parts before reset.
         BattleShipTile[][] tilesBefore = board.getBoard();
-        int countBeforeReset = 0;
+        int countBefore = 0;
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 if (tilesBefore[row][col].getShipValue() != 0) {
-                    countBeforeReset++;
+                    countBefore++;
                 }
             }
         }
-        assertEquals("Initial ship count should be 17", 17, countBeforeReset);
+        assertEquals(17, countBefore, "Initial ship count should be 17");
 
         // Reset the board.
         board.resetBoard();
         BattleShipTile[][] tilesAfter = board.getBoard();
-        int countAfterReset = 0;
+        int countAfter = 0;
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 if (tilesAfter[row][col].getShipValue() != 0) {
-                    countAfterReset++;
+                    countAfter++;
                 }
             }
         }
-        assertEquals("After reset, ship count should be 17", 17, countAfterReset);
+        assertEquals(17, countAfter, "After reset, ship count should be 17");
     }
 }
