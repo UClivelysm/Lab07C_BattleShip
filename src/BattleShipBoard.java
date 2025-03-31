@@ -1,18 +1,23 @@
+import java.util.ArrayList;
+import java.util.Random;
+
 public class BattleShipBoard {
     private BattleShipTile[][] board;
-    private String currentPlayer;
+    private ArrayList<BattleShipShip> ships;
+    private Random rand = new Random();
 
     public BattleShipBoard() {
-        board = new BattleShipTile[3][3];
+        board = new BattleShipTile[10][10];
+        ships = new ArrayList<>();
         createBoard();
-        currentPlayer = "X";
+        placeShips();
     }
 
+    // Initialize the board with empty BattleShipTiles.
     private void createBoard() {
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 10; col++) {
                 board[row][col] = new BattleShipTile(row, col);
-                board[row][col].setText(" ");
             }
         }
     }
@@ -21,73 +26,78 @@ public class BattleShipBoard {
         return board;
     }
 
-    public String getCurrentPlayer() {
-        return currentPlayer;
+    // Resets the board for a new game.
+    public void resetBoard() {
+        ships.clear();
+        createBoard();
+        placeShips();
     }
 
-    public boolean makeMove(int row, int col) {
-        if (board[row][col].getText().equals(" ")) {
-            board[row][col].setText(currentPlayer);
-            if (isWin(currentPlayer)) {
-                return true; // Move resulted in a win
-            }
-            switchPlayer();
-        }
-        return false;
-    }
+    // Place ships in order: 5, 4, 3, 3, 2.
+    private void placeShips() {
+        int[] shipLengths = {5, 4, 3, 3, 2};
+        String[] shipNames = {"Carrier", "Battleship", "Cruiser", "Submarine", "Destroyer"};
 
-    private void switchPlayer() {
-        currentPlayer = currentPlayer.equals("X") ? "O" : "X";
-    }
+        for (int i = 0; i < shipLengths.length; i++) {
+            boolean placed = false;
+            int length = shipLengths[i];
+            String name = shipNames[i];
 
-    public boolean isWin(String player) {
-        return isRowWin(player) || isColWin(player) || isDiagonalWin(player);
-    }
+            while (!placed) {
+                // Randomly decide orientation.
+                boolean isHorizontal = rand.nextBoolean();
+                int row, col;
 
-    private boolean isRowWin(String player) {
-        for (int row = 0; row < 3; row++) {
-            if (board[row][0].getText().equals(player) &&
-                    board[row][1].getText().equals(player) &&
-                    board[row][2].getText().equals(player)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isColWin(String player) {
-        for (int col = 0; col < 3; col++) {
-            if (board[0][col].getText().equals(player) &&
-                    board[1][col].getText().equals(player) &&
-                    board[2][col].getText().equals(player)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isDiagonalWin(String player) {
-        return (board[0][0].getText().equals(player) && board[1][1].getText().equals(player) && board[2][2].getText().equals(player)) ||
-                (board[0][2].getText().equals(player) && board[1][1].getText().equals(player) && board[2][0].getText().equals(player));
-    }
-
-    public boolean isTie() {
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                if (board[row][col].getText().equals(" ")) {
-                    return false;
+                if (isHorizontal) {
+                    row = rand.nextInt(10);
+                    col = rand.nextInt(10 - length + 1);
+                } else {
+                    row = rand.nextInt(10 - length + 1);
+                    col = rand.nextInt(10);
                 }
+
+                if (canPlaceShip(row, col, length, isHorizontal)) {
+                    // Place ship by setting the ship value in the board tiles.
+                    for (int j = 0; j < length; j++) {
+                        if (isHorizontal) {
+                            board[row][col + j].setShipValue(length);
+                        } else {
+                            board[row + j][col].setShipValue(length);
+                        }
+                    }
+                    // Add the ship using the external BattleShipShip class.
+                    ships.add(new BattleShipShip(name, length, row, col, isHorizontal));
+                    placed = true;
+                }
+            }
+        }
+    }
+
+    // Checks if a ship can be placed at the given location.
+    private boolean canPlaceShip(int row, int col, int length, boolean isHorizontal) {
+        for (int i = 0; i < length; i++) {
+            int r = isHorizontal ? row : row + i;
+            int c = isHorizontal ? col + i : col;
+            if (board[r][c].getShipValue() != 0) { // tile already occupied
+                return false;
             }
         }
         return true;
     }
 
-    public void resetBoard() {
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                board[row][col].setText(" ");
+    // Returns the BattleShipShip object that occupies the given tile, if any.
+    public BattleShipShip getShipAt(int row, int col) {
+        for (BattleShipShip ship : ships) {
+            if (ship.isHorizontal()) {
+                if (row == ship.getOriginRow() && col >= ship.getOriginCol() && col < ship.getOriginCol() + ship.getLength()) {
+                    return ship;
+                }
+            } else {
+                if (col == ship.getOriginCol() && row >= ship.getOriginRow() && row < ship.getOriginRow() + ship.getLength()) {
+                    return ship;
+                }
             }
         }
-        currentPlayer = "X";
+        return null;
     }
 }
